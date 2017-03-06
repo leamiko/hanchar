@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>看圖識字</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,maximum-scale=1.0,minimum-scale=1.0,initial-scale=1.0,user-scalable=no">
+	<script type="text/javascript" src="js/vue.js"></script>
+	<script type="text/javascript" src="js/chars.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/reset.css">
+	<link rel="stylesheet" type="text/css" href="css/icon.css">
+	<style type="text/css">
+		#app {
+      width: 100vw;
+      height: 100vh;
+      font-size: 16px;
+      display: flex;
+      flex-direction: column;
+    }
+    .content {
+      flex: 1;
+      overflow: auto;
+    }
+    .content .image-panel, .char-panel {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .content .image-panel .search {
+      flex: 0 0 40px;
+      width: 100%;
+      background: #353232;
+      display: flex;
+      justify-content: center;
+    }
+    .content .image-panel .search .search-wrapper{
+      flex: 1;
+      margin: 6px 10px;
+      color: #ffffff;
+      border-bottom: 1px solid #09f316;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .content .image-panel .search .search-wrapper .icon-so{
+      flex: 0 0 40px;
+      text-align: center;
+      font-size: 20px;
+    }
+    .content .image-panel .search .search-wrapper .input-so{
+      flex: 1;
+      outline: none;
+      border: none;
+      background: transparent;
+      color: #ffffff;
+    }
+    .content .image-panel .search .search-wrapper .icon-clear{
+      flex: 0 0 40px;
+      text-align: center;
+      font-size: 13px;
+    }
+    .content .image-panel .imgWrapper {
+      flex: 1;
+    }
+    .content .image-panel .imgWrapper img{
+      width: 100%;
+      max-width: 400px;
+      height: 100%;
+      max-height: 550px;
+    }
+    nav {
+      flex: 0 0 56px;
+      border-top: 1px solid;
+      display: flex;
+    }
+    nav .tab {
+      flex: 1;
+      text-align: center;
+      line-height: 56px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    nav .on {
+      color: #03b30d;
+    }
+    nav .tab .icon,nav .tab .name{
+      flex: 1;
+      width: 100%;
+      height: 28px;
+    }
+    nav .tab .icon {
+      line-height: 39px;
+      font-size: 25px;
+      height: 30px;
+    }
+    nav .tab .name {
+      line-height: 24px;
+      font-size: 14px;
+    }
+	</style>
+</head>
+<body>
+	<div id="app">
+    <div class="content">
+      <div class="image-panel" v-show="currentPanel === 'image-panel'">
+        <header class="search">
+          <div class="search-wrapper">
+            <i class="icon-search icon-so"></i>
+            <input type="text" class="input-so" v-model="searchValue" placeholder="搜索字">
+            <i class="icon-cross icon-clear" v-show="searchValue !== ''" @click="clearSearch()"></i>
+          </div>
+        </header>
+        <div class="imgWrapper">
+          <img ref="image">
+        </div>
+      </div>
+      <div class="char-panel" v-show="currentPanel === 'char-panel'"></div>
+    </div>    
+    <nav>
+      <div class="tab" :class="{'on': currentPanel === 'image-panel'}" @click="changeTab('image-panel')">
+        <i class="icon-image icon"></i>
+        <span class="name">看圖</span>
+      </div>
+      <div class="tab" :class="{'on': currentPanel === 'char-panel'}" @click="changeTab('char-panel')">
+        <i class="icon-pencil icon"></i>
+        <span class="name">選字</span>
+      </div>
+    </nav>
+	</div>
+</body>
+</html>
+<script type="text/javascript">
+  var IMAGE_PANEL = 'image-panel'
+  var CHAR_PANEL = 'char-panel'
+  var vm = new Vue({
+    el: '#app',
+    data: {
+      currentPanel: IMAGE_PANEL,
+      searchValue: '',
+      chars: [],
+      searchChars: [],
+      crrentImage: 'images/00011.jpg'
+    },
+    created: function () {
+      this.chars = chars
+      this.$nextTick(function () {
+        this.$refs.image.src = this.crrentImage
+      })
+    },
+    watch: {
+      searchValue: function (value, oldValue) {
+        value = value.trim()
+        this.search(value)
+        var char = this.searchChars[0]
+        if (char) {
+          var num = '00000' + char.id
+          num = num.slice(-5)
+          this.$refs.image.src = 'images/' + num + '.jpg'
+        }
+      }
+    },
+    methods: {
+      clearSearch: function () {
+        this.searchValue = ''
+        this.searchChars = []
+      },
+      changeTab: function (panel) {
+        this.currentPanel = panel
+      },
+      search: function (value) {
+        var list = []
+        this.chars.forEach(function (e) {
+          if (e.name === value || e.pinyin.substring(0, 1).toLowerCase() === value || e.cangjie.toLowerCase() === value) {
+            list.push(e)
+          }
+        })
+        this.searchChars = list
+      }
+    }
+  })
+</script>

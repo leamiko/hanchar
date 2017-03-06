@@ -1,0 +1,32 @@
+{
+  "name": "hanchar",
+  "version": "1.0.0",
+  "description": "看圖識字",
+  "main": "index.js",
+  "dependencies": {
+    "eslint": "^3.17.0"
+  },
+  "devDependencies": {
+    "eslint": "^3.14.1",
+    "eslint-config-standard": "^6.2.1",
+    "eslint-plugin-promise": "^3.4.0",
+    "eslint-plugin-standard": "^2.0.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zenyuca/hanchar.git"
+  },
+  "keywords": [
+    "vue",
+    "漢字"
+  ],
+  "author": "yuca",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zenyuca/hanchar/issues"
+  },
+  "homepage": "https://github.com/zenyuca/hanchar#readme"
+}
