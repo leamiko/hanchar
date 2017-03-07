@@ -262,13 +262,14 @@
       alphatab: ['↑', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'U', 'V', 'W', 'X', 'Y', 'Z'],
       trueAlphatab: ['↑'],
       searchChars: [],
-      crrentImage: 'images/00011.jpg',
+      currentImage: '',
       alpha: ''
     },
     created: function () {
       this.chars = chars
+      this.randomImage()
       this.$nextTick(function () {
-        this.$refs.image.src = this.crrentImage
+        this.$refs.image.src = this.currentImage
       })
       this.classifyChars()
     },
@@ -328,6 +329,13 @@
               ln.push(e)
             }
           })
+          ln.sort(function (a, b) {
+            var x = a.pinyin.localeCompare(b.pinyin)
+            if (x === 0) {
+              x = a.id - b.id
+            }
+            return x
+          })
           if (ln.length) {
             o.chars = ln
             list.push(o)
@@ -359,6 +367,12 @@
       selectChar: function (char) {
         this.currentPanel = IMAGE_PANEL
         this.searchValue = char.name
+      },
+      randomImage: function () {
+        var num = Math.floor(Math.random() * 1000) + 1
+        num = '00000' + num
+        num = num.slice(-5)
+        this.currentImage = 'images/' + num + '.jpg'
       }
     }
   })
