@@ -4,28 +4,33 @@
 	<title>看圖識字</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,maximum-scale=1.0,minimum-scale=1.0,initial-scale=1.0,user-scalable=no">
-	<script type="text/javascript" src="js/vue.js"></script>
+  <script type="text/javascript" src="js/vue.js"></script>
+	<script type="text/javascript" src="js/bscroll.min.js"></script>
 	<script type="text/javascript" src="js/chars.js"></script>
   <link rel="stylesheet" type="text/css" href="css/reset.css">
 	<link rel="stylesheet" type="text/css" href="css/icon.css">
 	<style type="text/css">
 		#app {
-      width: 100vw;
-      height: 100vh;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
       font-size: 16px;
-      display: flex;
-      flex-direction: column;
     }
     .content {
-      flex: 1;
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 56px;
+      width: 100%;
       overflow: auto;
     }
     .content .image-panel, .char-panel {
-      width: 100%;
-      height: 100%;
+      width: inherit;
+      height: inherit;
       display: flex;
       flex-direction: column;
-      align-items: center;
     }
     .content .image-panel .search {
       flex: 0 0 40px;
@@ -62,16 +67,98 @@
     }
     .content .image-panel .imgWrapper {
       flex: 1;
+      display: flex;
+      justify-content: center;
     }
     .content .image-panel .imgWrapper img{
       width: 100%;
       max-width: 400px;
       height: 100%;
-      max-height: 550px;
     }
+
+    .content .char-panel {
+      width: 100%;
+      height: 100%;
+    }
+    .content .char-panel .chars-wrapper{
+      height: 100%;
+      overflow: hidden;
+    }
+    .content .char-panel .title-item .title {
+      width: 100%;
+      background-color: #d2c9c9;
+      height: 24px;
+      line-height: 24px;
+    }
+    .content .char-panel .title-item .title .name{
+      margin-left: 7px;
+    }
+    .content .char-panel .title-item .char-item{
+      width: 100%;
+      height: 40px;
+      line-height: 40px;
+      border-bottom: 1px solid #bbb1b1;
+    }
+    .content .char-panel .title-item .char-item:last-child{
+      border-bottom: none;
+    }
+    .content .char-panel .title-item .char-item .name{
+      margin-left: 7px;
+    }
+    .content .on{
+      color: #fff;
+      background-color: rgba(51, 51, 51, 0.75);
+    }
+    .content .alpha-list{
+      position: absolute;
+      width: 25px;
+      top: 0;
+      right: 0;
+      text-align: center;
+      font-size: 14px;
+      height: 100%;
+      z-index: 1;
+    }
+    .content .alpha-list .alpha-ul{
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    .content .alpha-list .alpha-item{
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .content .alpha-panel{
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .content .alpha-panel .alpha{
+      font-size: 46px;
+      width: 80px;
+      height: 80px;
+      line-height: 80px;
+      background-color: rgba(51, 51, 51, 0.75);
+      color: #eaeaea;
+      text-align: center;
+      border-radius: 5px;
+    }
+
     nav {
-      flex: 0 0 56px;
-      border-top: 1px solid;
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      height: 56px;
+      width: 100%;
+      display: -ms-flexbox;
+      border-top: 1px solid #938989;
       display: flex;
     }
     nav .tab {
@@ -117,7 +204,37 @@
           <img ref="image">
         </div>
       </div>
-      <div class="char-panel" v-show="currentPanel === 'char-panel'"></div>
+      <div class="char-panel" v-show="currentPanel === 'char-panel'">
+        <div class="chars-wrapper" ref="charsListScroll">
+          <ul>
+            <li class="title-item chars-list-hook" v-for="classChar in classChars">
+              <header class="title">
+                <span class="name">{{classChar.name}}</span>
+              </header>
+              <ul>
+                <li class="char-item" v-for="char in classChar.chars" @click="selectChar(char)">
+                  <span class="name">
+                    {{char.name}}
+                  </span>
+                  <span class="pinyin">
+                    {{char.pinyin}}
+                  </span>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <div class="alpha-list" :class="{'on': alpha}">
+          <ul class="alpha-ul">
+            <li class="alpha-item" v-for="alpha in trueAlphatab" @mousedown.stop="selectAlpha(alpha)" @mouseup.stop="unselectAlpha()" @touchstart.stop="selectAlpha(alpha)" @touchend.stop="unselectAlpha()">
+              <span>{{alpha}}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="alpha-panel" v-show="alpha">
+          <span class="alpha">{{ alpha }}</span>
+        </div>
+      </div>
     </div>    
     <nav>
       <div class="tab" :class="{'on': currentPanel === 'image-panel'}" @click="changeTab('image-panel')">
@@ -141,14 +258,19 @@
       currentPanel: IMAGE_PANEL,
       searchValue: '',
       chars: [],
+      classChars: [],
+      alphatab: ['↑', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'U', 'V', 'W', 'X', 'Y', 'Z'],
+      trueAlphatab: ['↑'],
       searchChars: [],
-      crrentImage: 'images/00011.jpg'
+      crrentImage: 'images/00011.jpg',
+      alpha: ''
     },
     created: function () {
       this.chars = chars
       this.$nextTick(function () {
         this.$refs.image.src = this.crrentImage
       })
+      this.classifyChars()
     },
     watch: {
       searchValue: function (value, oldValue) {
@@ -163,12 +285,26 @@
       }
     },
     methods: {
+      initScroll: function () {
+        if (this.charsListScroll) {
+          this.$nextTick(function () {
+            this.charsListScroll.refresh()
+          })
+        } else {
+          this.$nextTick(function () {
+            this.charsListScroll = new window.BScroll(this.$refs.charsListScroll, {
+              click: true
+            })
+          })
+        }
+      },
       clearSearch: function () {
         this.searchValue = ''
         this.searchChars = []
       },
       changeTab: function (panel) {
         this.currentPanel = panel
+        this.initScroll()
       },
       search: function (value) {
         var list = []
@@ -178,6 +314,51 @@
           }
         })
         this.searchChars = list
+      },
+      classifyChars: function () {
+        var list = []
+        var _this = this
+        this.alphatab.forEach(function (alpha) {
+          var o = {
+            name: alpha
+          }
+          var ln = []
+          this.chars.forEach(function (e) {
+            if (alpha.toLowerCase() === e.pinyin.slice(0, 1)) {
+              ln.push(e)
+            }
+          })
+          if (ln.length) {
+            o.chars = ln
+            list.push(o)
+            _this.trueAlphatab.push(alpha)
+          }
+        })
+        this.classChars = list
+      },
+      selectAlpha: function (alpha) {
+        this.alpha = alpha
+
+        this.charsList = this.$refs.charsListScroll.getElementsByClassName('chars-list-hook')
+        var el = null
+        for (var i = 0; i < this.charsList.length; i++) {
+          var node = this.charsList[i]
+          var _alpha = node.childNodes[0].childNodes[0].innerHTML
+          if (alpha === _alpha || alpha === '↑') {
+            el = node
+            break
+          }
+        }
+        if (el) {
+          this.charsListScroll.scrollToElement(el, 300)
+        }
+      },
+      unselectAlpha: function () {
+        this.alpha = ''
+      },
+      selectChar: function (char) {
+        this.currentPanel = IMAGE_PANEL
+        this.searchValue = char.name
       }
     }
   })
