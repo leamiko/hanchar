@@ -4,7 +4,8 @@
   "description": "看圖識字",
   "main": "index.js",
   "dependencies": {
-    "eslint": "^3.17.0"
+    "eslint": "^3.17.0",
+    "pinyin": "^2.8.0"
   },
   "devDependencies": {
     "eslint": "^3.14.1",
