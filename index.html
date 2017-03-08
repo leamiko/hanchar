@@ -330,6 +330,9 @@
             list.push(e)
           }
         })
+        console.log(JSON.stringify(list, null, 2))
+        this.sort(list)
+        console.log(JSON.stringify(list, null, 2))
         this.searchChars = list
         this.rendeImage()
       },
@@ -354,13 +357,7 @@
               ln.push(e)
             }
           })
-          ln.sort(function (a, b) {
-            var x = a.pinyin.localeCompare(b.pinyin)
-            if (x === 0) {
-              x = a.id - b.id
-            }
-            return x
-          })
+          _this.sort(ln)
           if (ln.length) {
             o.chars = ln
             list.push(o)
@@ -368,6 +365,15 @@
           }
         })
         this.classChars = list
+      },
+      sort: function (list) {
+        list.sort(function (a, b) {
+          var x = a.pinyin.toString().localeCompare(b.pinyin.toString())
+          if (x === 0) {
+            x = a.id - b.id
+          }
+          return x
+        })
       },
       selectAlpha: function (alpha) {
         this.alpha = alpha
