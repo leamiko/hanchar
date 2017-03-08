@@ -7,6 +7,8 @@
 2. [下載](https://yun.baidu.com/s/1c2Hke8g)圖片
 3. 解壓圖片到根目錄
 
+**註：** 圖片來源，[朱邦復工作室](http://www.cbflabs.com/?id=99)
+
 ---
 
 ### 目錄結構
