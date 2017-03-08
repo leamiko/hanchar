@@ -21,6 +21,7 @@
     .content {
       position: absolute;
       left: 0;
+      right: 0;
       top: 0;
       bottom: 56px;
       width: 100%;
@@ -61,7 +62,9 @@
     }
     .content .image-panel .search .search-wrapper .search-chars-panel{
       position: absolute;
+      left: 0;
       top: 40px;
+      right: 0;
       width: 100%;
       height: 200px;
       overflow: auto;
@@ -81,15 +84,8 @@
     }
     .content .image-panel .imgWrapper {
       flex: 1;
-      display: flex;
-      justify-content: center;
+      overflow: auto;
     }
-    .content .image-panel .imgWrapper img{
-      width: 100%;
-      max-width: 400px;
-      height: 100%;
-    }
-
     .content .char-panel {
       width: 100%;
       height: 100%;
@@ -223,7 +219,7 @@
           </div>
         </header>
         <div class="imgWrapper">
-          <img ref="image">
+          <img ref="image" width="100%">
         </div>
       </div>
       <div class="char-panel" v-show="currentPanel === 'char-panel'">
@@ -330,9 +326,7 @@
             list.push(e)
           }
         })
-        console.log(JSON.stringify(list, null, 2))
         this.sort(list)
-        console.log(JSON.stringify(list, null, 2))
         this.searchChars = list
         this.rendeImage()
       },
