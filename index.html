@@ -59,6 +59,21 @@
       background: transparent;
       color: #ffffff;
     }
+    .content .image-panel .search .search-wrapper .search-chars-panel{
+      position: absolute;
+      top: 40px;
+      width: 100%;
+      height: 200px;
+      overflow: auto;
+      background-color: #353232;
+    }
+    .content .image-panel .search .search-wrapper .search-chars-panel .char-item{
+      height: 30px;
+      line-height: 30px;
+      border-bottom: 1px solid rgba(76, 71, 71, 0.78);
+      margin: 0 12px;
+      padding-left: 10px;
+    }
     .content .image-panel .search .search-wrapper .icon-clear{
       flex: 0 0 40px;
       text-align: center;
@@ -85,9 +100,10 @@
     }
     .content .char-panel .title-item .title {
       width: 100%;
-      background-color: #d2c9c9;
+      background-color: rgba(51, 51, 51, 0.75);
       height: 24px;
       line-height: 24px;
+      color: #ffffff;
     }
     .content .char-panel .title-item .title .name{
       margin-left: 7px;
@@ -195,7 +211,14 @@
         <header class="search">
           <div class="search-wrapper">
             <i class="icon-search icon-so"></i>
-            <input type="text" class="input-so" v-model="searchValue" placeholder="搜索字">
+            <input type="text" class="input-so" v-model="searchValue" placeholder="輸入字、拼音首字母、倉頡字母">
+            <ul class="search-chars-panel" v-show="searchChars.length > 1">
+              <li class="char-item" v-for="(char, index) in searchChars" @click="selectChar(char)">
+                {{index + 1}}.
+                <span class="name">{{char.name}}</span>
+                <span class="pinyin">{{char.pinyin}}</span>
+              </li>
+            </ul>
             <i class="icon-cross icon-clear" v-show="searchValue !== ''" @click="clearSearch()"></i>
           </div>
         </header>
@@ -276,12 +299,6 @@
       searchValue: function (value, oldValue) {
         value = value.trim()
         this.search(value)
-        var char = this.searchChars[0]
-        if (char) {
-          var num = '00000' + char.id
-          num = num.slice(-5)
-          this.$refs.image.src = 'images/' + num + '.jpg'
-        }
       }
     },
     methods: {
@@ -314,6 +331,15 @@
           }
         })
         this.searchChars = list
+        this.rendeImage()
+      },
+      rendeImage: function () {
+        var char = this.searchChars[0]
+        if (char) {
+          var num = '00000' + char.id
+          num = num.slice(-5)
+          this.$refs.image.src = 'images/' + num + '.jpg'
+        }
       },
       classifyChars: function () {
         var list = []
@@ -365,7 +391,9 @@
       },
       selectChar: function (char) {
         this.currentPanel = IMAGE_PANEL
+        this.search(char.name)
         this.searchValue = char.name
+        this.searchChars = []
       },
       randomImage: function () {
         var num = Math.floor(Math.random() * 1000) + 1
