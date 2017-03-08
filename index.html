@@ -326,7 +326,7 @@
       search: function (value) {
         var list = []
         this.chars.forEach(function (e) {
-          if (e.name === value || e.pinyin.substring(0, 1).toLowerCase() === value || e.cangjie.toLowerCase() === value) {
+          if (e.name === value || e.pinyin.substring(0, 1) === value.toLowerCase() || e.cangjie.toLowerCase() === value) {
             list.push(e)
           }
         })
