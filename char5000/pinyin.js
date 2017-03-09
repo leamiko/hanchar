@@ -15,10 +15,10 @@ fs.writeFile('./data.json', JSON.stringify(chars, null, 2), (err) => {
   }
 })
 
-fs.readFile('./5000.txt', 'utf-8', (err, data) => {
-  if (err) {
-    console.log('讀取失敗')
-  } else {
-    console.log(data)
-  }
-})
+// fs.readFile('./5000.txt', 'utf-8', (err, data) => {
+//   if (err) {
+//     console.log('讀取失敗')
+//   } else {
+//     console.log(data)
+//   }
+// })
