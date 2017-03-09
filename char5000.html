@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>看圖識字</title>
+	<title>5000會意字</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,maximum-scale=1.0,minimum-scale=1.0,initial-scale=1.0,user-scalable=no">
   <script type="text/javascript" src="js/vue.js"></script>
 	<script type="text/javascript" src="js/bscroll.min.js"></script>
-	<script type="text/javascript" src="js/chars.js"></script>
+	<script type="text/javascript" src="js/char5000.js"></script>
   <link rel="stylesheet" type="text/css" href="css/reset.css">
 	<link rel="stylesheet" type="text/css" href="css/icon.css">
 	<style type="text/css">
@@ -82,9 +82,28 @@
       text-align: center;
       font-size: 13px;
     }
-    .content .image-panel .imgWrapper {
+    .content .image-panel .charWrapper {
       flex: 1;
       overflow: auto;
+      padding: 0 10px;
+    }
+    .content .image-panel .charWrapper .name{
+      width: 100%;
+      height: 100px;
+      line-height: 100px;
+      font-size: 50px;
+    }
+    .content .image-panel .charWrapper .name .pinyin{
+      font-size: 25px;
+      margin-left: 5px;
+    }
+    .content .image-panel .charWrapper .head, .foot, .type, .mean{
+      width: 100%;
+      line-height: 30px;
+    }
+    .content .image-panel .charWrapper .mean{
+      width: 100%;
+      line-height: 30px;
     }
     .content .char-panel {
       width: 100%;
@@ -207,7 +226,7 @@
         <header class="search">
           <div class="search-wrapper">
             <i class="icon-search icon-so"></i>
-            <input type="text" class="input-so" v-model="searchValue" placeholder="輸入字、拼音首字母、倉頡字母">
+            <input type="text" class="input-so" v-model="searchValue" placeholder="輸入字、拼音首字母">
             <ul class="search-chars-panel" v-show="searchChars.length > 1">
               <li class="char-item" v-for="(char, index) in searchChars" @click="selectChar(char)">
                 {{index + 1}}.
@@ -218,8 +237,17 @@
             <i class="icon-cross icon-clear" v-show="searchValue !== ''" @click="clearSearch()"></i>
           </div>
         </header>
-        <div class="imgWrapper">
-          <img ref="image" width="100%">
+        <div class="charWrapper">
+          <div class="name">
+            {{currentChar.name}}
+            <span class="pinyin">
+              {{currentChar.pinyin}}
+            </span>
+          </div>
+          <div class="head">{{currentChar.head}}</div>
+          <div class="foot">{{currentChar.foot}}</div>
+          <div class="type">來源：{{currentChar.type}}</div>
+          <div class="mean">概念：{{currentChar.mean}}</div>
         </div>
       </div>
       <div class="char-panel" v-show="currentPanel === 'char-panel'">
@@ -257,7 +285,7 @@
     <nav>
       <div class="tab" :class="{'on': currentPanel === 'image-panel'}" @click="changeTab('image-panel')">
         <i class="icon-image icon"></i>
-        <span class="name">看圖</span>
+        <span class="name">會意</span>
       </div>
       <div class="tab" :class="{'on': currentPanel === 'char-panel'}" @click="changeTab('char-panel')">
         <i class="icon-pencil icon"></i>
@@ -269,7 +297,9 @@
 </html>
 <script type="text/javascript">
   var IMAGE_PANEL = 'image-panel'
+  /* eslint no-unused-var: true */
   var CHAR_PANEL = 'char-panel'
+  /* eslint no-unused-var: true */
   var vm = new Vue({
     el: '#app',
     data: {
@@ -280,15 +310,12 @@
       alphatab: ['↑', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'U', 'V', 'W', 'X', 'Y', 'Z'],
       trueAlphatab: ['↑'],
       searchChars: [],
-      currentImage: '',
+      currentChar: '',
       alpha: ''
     },
     created: function () {
-      this.chars = chars
-      this.randomImage()
-      this.$nextTick(function () {
-        this.$refs.image.src = this.currentImage
-      })
+      this.chars = char5000
+      this.randomChar()
       this.classifyChars()
     },
     watch: {
@@ -322,20 +349,18 @@
       search: function (value) {
         var list = []
         this.chars.forEach(function (e) {
-          if (e.name === value || e.pinyin.substring(0, 1) === value.toLowerCase() || e.cangjie.toLowerCase() === value) {
+          if (e.name === value || e.pinyin.substring(0, 1) === value.toLowerCase()) {
             list.push(e)
           }
         })
         this.sort(list)
         this.searchChars = list
-        this.rendeImage()
+        this.rendeData()
       },
-      rendeImage: function () {
+      rendeData: function () {
         var char = this.searchChars[0]
         if (char) {
-          var num = '00000' + char.id
-          num = num.slice(-5)
-          this.$refs.image.src = 'images/' + num + '.jpg'
+          this.currentChar = char
         }
       },
       classifyChars: function () {
@@ -395,11 +420,14 @@
         this.searchValue = char.name
         this.searchChars = []
       },
-      randomImage: function () {
-        var num = Math.floor(Math.random() * 1000) + 1
-        num = '00000' + num
-        num = num.slice(-5)
-        this.currentImage = 'images/' + num + '.jpg'
+      randomChar: function () {
+        var id = Math.floor(Math.random() * 3755) + 1
+        var _this = this
+        this.chars.forEach(function (e, index) {
+          if (id === e.id) {
+            _this.currentChar = e
+          }
+        })
       }
     }
   })

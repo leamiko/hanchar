@@ -1,4 +1,4 @@
-/* eslint no-implicit-globals: '' */
+/* eslint no-unused-var: true */
 var chars = [
   {
     id: 1,
