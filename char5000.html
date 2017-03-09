@@ -348,8 +348,9 @@
       },
       search: function (value) {
         var list = []
+        var _this = this
         this.chars.forEach(function (e) {
-          if (e.name === value || e.pinyin.substring(0, 1) === value.toLowerCase()) {
+          if (e.name === value || _this.firstPinyin(e.pinyin.substring(0, 1)) === value.toLowerCase()) {
             list.push(e)
           }
         })
@@ -363,6 +364,17 @@
           this.currentChar = char
         }
       },
+      firstPinyin: function (char) {
+        if (char === 'ā' || char === 'á' || char === 'ǎ' || char === 'à') {
+          return 'a'
+        } else if (char === 'ō' || char === 'ó' || char === 'ǒ' || char === 'ò') {
+          return 'o'
+        } else if (char === 'ē' || char === 'é' || char === 'ě' || char === 'è') {
+          return 'e'
+        } else {
+          return char
+        }
+      },
       classifyChars: function () {
         var list = []
         var _this = this
@@ -372,7 +384,7 @@
           }
           var ln = []
           _this.chars.forEach(function (e) {
-            if (alpha.toLowerCase() === e.pinyin.slice(0, 1)) {
+            if (alpha.toLowerCase() === _this.firstPinyin(e.pinyin.slice(0, 1))) {
               ln.push(e)
             }
           })
