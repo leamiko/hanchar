@@ -2,7 +2,8 @@
 # _*_ encoding=utf-8 _*_
 # 讀取初始文件，將之轉換成 json 數據
 
-import json, re
+import json
+import re
 
 
 with open('./5000.txt', 'r') as f:

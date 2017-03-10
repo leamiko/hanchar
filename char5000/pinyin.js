@@ -9,9 +9,9 @@ chars.forEach((e, i) => {
 
 fs.writeFile('./data.json', JSON.stringify(chars, null, 2), (err) => {
   if (err) {
-    console.log('写文件操作失败')
+    console.log('失敗')
   } else {
-    console.log('写文件操作成功')
+    console.log('成功')
   }
 })
 
