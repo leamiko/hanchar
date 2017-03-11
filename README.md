@@ -15,13 +15,13 @@
 ---
 
 ### 目錄結構
-![](./docs/images/dir.png)
+![](./docs/imgs/dir.png)
 
 ---
 
 ### 頁面截圖
-![](./docs/images/kantu.png)
-![](./docs/images/xuanzi.png)
+![](./docs/imgs/kantu.png)
+![](./docs/imgs/xuanzi.png)
 
 ---
 
