@@ -241,7 +241,7 @@
         <header class="search">
           <div class="search-wrapper">
             <i class="icon-search icon-so"></i>
-            <input type="text" class="input-so" v-model="searchValue" placeholder="輸入字、拼音首字母" ref="inputSo">
+            <input type="text" class="input-so" v-model="searchValue" placeholder="輸入字、拼音首字母" ref="inputSo" @mouseover="clearSearch()" @mouseleave="this.blur()">
             <ul class="search-chars-panel" v-show="searchChars.length > 1">
               <li class="char-item" v-for="(char, index) in searchChars" @click="selectChar(char)">
                 {{index + 1}}.
