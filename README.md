@@ -1,3 +1,5 @@
+# 下為[記憶之門](./docs/記憶之門.md)輔佐應用
+
 # 1. 看圖識字 - 手機網頁版
 
 ---
@@ -13,13 +15,13 @@
 ---
 
 ### 目錄結構
-![](./docs/dir.png)
+![](./docs/images/dir.png)
 
 ---
 
 ### 頁面截圖
-![](./docs/kantu.png)
-![](./docs/xuanzi.png)
+![](./docs/images/kantu.png)
+![](./docs/images/xuanzi.png)
 
 ---
 
