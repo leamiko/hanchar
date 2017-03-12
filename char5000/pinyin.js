@@ -1,3 +1,5 @@
+#! /usr/bin/env node
+
 let pinyin = require('pinyin')
 let chars = require('./data.json')
 let fs = require('fs')
@@ -9,16 +11,19 @@ chars.forEach((e, i) => {
 
 fs.writeFile('./data.json', JSON.stringify(chars, null, 2), (err) => {
   if (err) {
-    console.log('失敗')
+    console.log('寫入 data.json 失敗')
   } else {
-    console.log('成功')
+    console.log('寫入 data.json 成功')
   }
 })
 
-// fs.readFile('./5000.txt', 'utf-8', (err, data) => {
-//   if (err) {
-//     console.log('讀取失敗')
-//   } else {
-//     console.log(data)
-//   }
-// })
+let data = '/* eslint no-unused-var: true */\n'
+data += 'var char5000 = ' + JSON.stringify(chars, null, 2)
+
+fs.writeFile('../js/char5000.js', data, (err) => {
+  if (err) {
+    console.log('寫入 char5000.js 失敗')
+  } else {
+    console.log('寫入 char5000.js 成功')
+  }
+})

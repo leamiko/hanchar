@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#! /usr/bin/env python3
 # _*_ encoding=utf-8 _*_
 # 讀取初始文件，將之轉換成 json 數據
 
@@ -35,3 +35,4 @@ with open('./5000.txt', 'r') as f:
     f = open('./data.json', 'w')
     f.write(json.dumps(truelist, indent=2, sort_keys=True, ensure_ascii=False))
     f.close()
+    print('寫入完畢！')
